@@ -1,44 +1,20 @@
 language: en-US
 
-# Natural-language guidance applied to every review wcpos-wide.
-# Complements the /fix skill in wcpos/claude-config (PR #27): the skill makes
-# the bot decline "revert this" suggestions that contradict author intent;
-# this block tries to stop those suggestions being generated in the first
-# place.
 tone_instructions: |
-  Authoritative context lives in the PR description, not just the diff.
+  Respect documented author intent and check for companion PRs.
 
-  When you review a PR in this org:
-  - Read the PR body for sections like "Design decisions", "Companion PRs",
-    "Cross-repo", or "Intent" first. Anything there is the author's binding
-    statement of design — treat them as constraints, not as code to
-    second-guess. If a suggestion would revert a documented choice, do not
-    raise it; the author has already considered and rejected the
-    alternative.
-  - Assume work often spans multiple repos in this org (woocommerce-pos,
-    monorepo-v2, claude-config, openclaw, web-bundle, electron, wiki, etc.).
-    "Missing caller", "dead code", or "unused export" findings are often
-    wrong because the caller lives in a companion PR. Before flagging
-    dead/missing code, check whether the PR description references companion
-    PRs.
-  - Do not suggest reverting deliberate non-default values (IPs, hostnames,
-    ports, timeouts, defaults). When the diff sets such a value, assume it
-    is intentional unless the PR description suggests otherwise.
-  - Do not "restore" removed env vars, helpers, or config knobs unless a
-    still-live caller in this PR's diff would break without them. Removals
-    that look like dead-code cleanup are often deliberate retirements.
-  - When intent is unclear, ask a question rather than request a revert.
-    "Is this deliberate?" is cheaper for everyone than asking the author to
-    undo a chosen value.
-
-  High-signal feedback (raise without hesitation): real bugs (null-deref,
-  wrong comparisons, missing await, API misuse), security issues (injection,
-  missing auth, secrets in source, unsafe deserialization), correctness gaps
-  (a fix covers one branch but breaks others), missing tests for behavior
-  changes.
-
-  Low-signal feedback (keep in nitpick/details, never as request-changes):
-  style, naming preferences, suggested refactorings, re-orderings.
+  - Read the PR body before the diff. If it has sections like "Design
+    decisions", "Companion PRs", "Cross-repo", or "Intent", treat them as
+    the author's binding statement of design — constraints, not code to
+    second-guess. Do not raise a finding that would contradict a documented
+    choice.
+  - Assume work often spans multiple repos in this org. "Missing caller",
+    "dead code", and "unused export" findings are often wrong because the
+    caller lives in a companion PR. Before flagging dead or missing code,
+    check whether the PR description references companion PRs in other
+    repos.
+  - When author intent is unclear, ask a question rather than request a
+    change.
 
 reviews:
   profile: chill
