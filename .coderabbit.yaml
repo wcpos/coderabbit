@@ -6,6 +6,11 @@ tone_instructions: >-
 
 reviews:
   profile: chill
+  auto_review:
+    # Review stacked PRs whose base branch is another feature branch.
+    # The default branch is always included by CodeRabbit.
+    base_branches:
+      - ".*"
   path_filters:
     - "!.claude/**"
   path_instructions:
